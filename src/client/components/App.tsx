@@ -48,8 +48,8 @@ function App() {
     // Filter channels
     const filteredChannels = useMemo(() => {
         return channels.filter((ch: any) => {
-            const matchCountry = !filterCountry || ch.countryCode === filterCountry;
-            const matchCategory = !filterCategory || ch.categories?.includes(filterCategory);
+            const matchCountry = !filterCountry || !ch.countryCode || ch.countryCode.toUpperCase() === filterCountry.toUpperCase();
+            const matchCategory = !filterCategory || !ch.categories || ch.categories.some((cat: string) => cat.toUpperCase() === filterCategory.toUpperCase());
             const matchSearch = !searchQuery ||
                 ch.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 ch.groupTitle?.toLowerCase().includes(searchQuery.toLowerCase());
