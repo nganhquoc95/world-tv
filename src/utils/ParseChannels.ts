@@ -1,20 +1,19 @@
 import path from 'path';
 import fs from 'fs';
+import ChannelParser from '../services/ChannelParser';
+import ChannelRepository from '../services/ChannelRepository';
+import Database from './Database';
+import { IChannelItem } from '../types';
 
-export interface IChannelItem {
-    tvgId: string;
-    tvgLogo: string;
-    categories: string[];
-    name: string;
-    countryCode: string;
-    quanlity: string;
-    url: string;
-    httpReferrer?: string;
-    httpUserAgent?: string;
-}
-
+/**
+ * ParseChannels - Orchestrates parsing and storage of M3U channels
+ * Uses composition and dependency injection
+ * Follows Single Responsibility and Open/Closed principles
+ */
 class ParseChannels {
     private streamListPath: string;
+    private parser: ChannelParser;
+    private repository: ChannelRepository;
 
     constructor() {
         this.streamListPath = path.join(
@@ -22,70 +21,64 @@ class ParseChannels {
             '../..',
             'data/streams/index.m3u'
         );
+        this.parser = new ChannelParser();
+        this.repository = new ChannelRepository(new Database());
     }
 
     /**
-     * Parse channels from the M3U stream list
+     * Parse M3U file and cache in database if needed
      */
-    public parse(): IChannelItem[] {
-        const fileContent = fs.readFileSync(this.streamListPath, 'utf-8');
-        const lines = fileContent.split('\n');
-        const channels: IChannelItem[] = [];
+    public async parse(): Promise<IChannelItem[]> {
+        try {
+            const fileContent = fs.readFileSync(this.streamListPath, 'utf-8');
+            const channels = this.parser.parseFile(fileContent);
 
-        // skip 3 lines of header
-        for (let i = 3, step = 0; i < lines.length; i = i + step) {
-            step = 0;
-            const line = lines[i].trim();
-            if (line.startsWith('#EXTINF:')) {
-                const infoLine = line;
-                const urlLine = lines[i + 1]?.trim() || '';
-                const channelItem = this.convertInfoToChannelItem(infoLine, urlLine);
-                if (channelItem) {
-                    channels.push(channelItem);
-                }
+            // Store to database only if empty
+            const hasChannels = await this.repository.hasChannels();
+            if (!hasChannels) {
+                await this.repository.save(channels);
             }
 
-            while (i + step < lines.length && lines[i + step].trim().startsWith('#')) {
-                step++;
-            }
-            step = Math.max(step, 1);
+            return channels;
+        } catch (error) {
+            console.error('Error parsing channels:', error);
+            throw error;
         }
-
-        return channels;
     }
 
-    private convertInfoToChannelItem(infoLine: string, urlLine: string): IChannelItem | null {
-        const infoPattern = /#EXTINF:-1\s+tvg-id="([^"]*)"\s+tvg-logo="([^"]*)"\s+group-title="([^"]*)"[^,]*,(.+)$/;
-        const match = infoLine.match(infoPattern);
-        if (!match) {
-            return null;
-        }
+    /**
+     * Delegate to repository methods
+     */
+    public getChannels(limit?: number, offset?: number): Promise<IChannelItem[]> {
+        return this.repository.findAll(limit, offset);
+    }
 
-        // Extract http-referrer and http-user-agent from the info line
-        const httpReferrerMatch = infoLine.match(/http-referrer="([^"]*)"/);
-        const httpUserAgentMatch = infoLine.match(/http-user-agent="([^"]*)"/);
+    public searchChannels(query: string): Promise<IChannelItem[]> {
+        return this.repository.search(query);
+    }
 
-        const [countryCode = '', quanlity = ''] = (match[1].split('.').pop() || '').split('@');
+    public getChannelsByCountry(countryCode: string): Promise<IChannelItem[]> {
+        return this.repository.findByCountry(countryCode);
+    }
 
-        const channelItem: IChannelItem = {
-            tvgId: match[1],
-            tvgLogo: match[2],
-            categories: match[3].split('p'),
-            name: match[4].trim(),
-            countryCode,
-            quanlity,
-            url: urlLine,
-        };
+    public getChannelById(tvgId: string): Promise<IChannelItem | null> {
+        return this.repository.findById(tvgId);
+    }
 
-        // Add optional headers if found
-        if (httpReferrerMatch) {
-            channelItem.httpReferrer = httpReferrerMatch[1];
-        }
-        if (httpUserAgentMatch) {
-            channelItem.httpUserAgent = httpUserAgentMatch[1];
-        }
+    public getChannelCount(): Promise<number> {
+        return this.repository.count();
+    }
 
-        return channelItem;
+    public getCountries(): Promise<string[]> {
+        return this.repository.getCountries();
+    }
+
+    public getCategories(): Promise<string[]> {
+        return this.repository.getCategories();
+    }
+
+    public closeDatabase(): void {
+        this.repository.close();
     }
 }
 

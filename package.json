@@ -5,9 +5,13 @@
   "main": "dist/server/app.js",
   "scripts": {
     "start": "ts-node src/server/app.ts",
-    "build": "tsc",
-    "dev": "ts-node src/server/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "react-scripts build",
+    "build:server": "tsc",
+    "server:dev": "ts-node src/server/app.ts",
+    "client:dev": "react-scripts start --port 3001",
+    "test": "react-scripts test"
   },
   "keywords": [
     "tv",
@@ -25,13 +29,32 @@
     "@types/csvtojson": "^1.1.5",
     "@types/express": "^5.0.5",
     "@types/node": "^24.10.1",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
     "cors": "^2.8.5",
     "csvtojson": "^2.0.14",
     "express": "^5.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "sqlite3": "^5.1.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19"
+    "@types/cors": "^2.8.19",
+    "concurrently": "^8.2.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

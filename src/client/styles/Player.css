@@ -1,0 +1,179 @@
+.player-container {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background: #000;
+}
+
+.player-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+
+.player-video {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    overflow: hidden;
+}
+
+.player-video video {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.player-info {
+    width: 320px;
+    background: #1a1a2e;
+    border-left: 1px solid #2d2d44;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.player-header {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+.player-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.player-title-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.player-title {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+    word-break: break-word;
+}
+
+.player-group {
+    color: #8a8a9e;
+    font-size: 0.9em;
+    margin: 0;
+}
+
+.player-metadata {
+    background: #252540;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.metadata-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #3d3d54;
+}
+
+.metadata-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.metadata-item .label {
+    font-size: 0.8em;
+    color: #8a8a9e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.metadata-item .value {
+    color: #667eea;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.player-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.player-actions .btn {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+}
+
+/* Scrollbar styling */
+.player-info::-webkit-scrollbar {
+    width: 6px;
+}
+
+.player-info::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.player-info::-webkit-scrollbar-thumb {
+    background: #3d3d54;
+    border-radius: 3px;
+}
+
+.player-info::-webkit-scrollbar-thumb:hover {
+    background: #4d4d64;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .player-container {
+        flex-direction: column;
+    }
+
+    .player-info {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #2d2d44;
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .player-info {
+        max-height: 300px;
+        padding: 15px;
+    }
+
+    .player-header {
+        gap: 12px;
+    }
+
+    .player-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .player-title {
+        font-size: 1.2em;
+    }
+
+    .player-actions {
+        flex-direction: column;
+    }
+
+    .player-actions .btn {
+        width: 100%;
+    }
+}

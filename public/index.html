@@ -540,12 +540,22 @@
         };
 
         let countries = new Set();
+        let countryNames = {}; // Map of country code to country name
         let groups = new Set();
         let hls = null;
 
         // Initialize
         async function init() {
             try {
+                // Load country names mapping
+                const countryRes = await fetch('/api/countries');
+                const countryData = await countryRes.json();
+                if (countryData.data) {
+                    countryData.data.forEach(country => {
+                        countryNames[country.code] = country.name;
+                    });
+                }
+
                 // Load all channels
                 const res = await fetch('/api/streams?page=1&limit=10000');
                 const data = await res.json();
@@ -581,7 +591,9 @@
             sortedCountries.forEach(code => {
                 const option = document.createElement('option');
                 option.value = code;
-                option.textContent = code;
+                // Display country name if available, otherwise code
+                const name = countryNames[code] || code;
+                option.textContent = `${name} (${code})`;
                 select.appendChild(option);
             });
         }
