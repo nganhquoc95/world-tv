@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilterCountry, setFilterCategory, setSearchQuery } from '../store/slices/filtersSlice';
+import { setFilterCountry, setFilterCategory } from '../store/slices/filtersSlice';
 import { RootState } from '../store';
 import InfiniteDropdown from './InfiniteDropdown';
+import SearchInput from './SearchInput';
 import '../styles/Header.css';
 
 interface HeaderProps {
@@ -11,7 +12,7 @@ interface HeaderProps {
 
 function Header({ countryNameMap, categories }: HeaderProps) {
     const dispatch = useDispatch();
-    const { filterCountry, filterCategory, searchQuery } = useSelector((state: RootState) => state.filters);
+    const { filterCountry, filterCategory } = useSelector((state: RootState) => state.filters);
 
     // Convert country map to dropdown options
     const countryOptions = Object.entries(countryNameMap)
@@ -55,13 +56,7 @@ function Header({ countryNameMap, categories }: HeaderProps) {
                         />
                     </div>
 
-                    <input
-                        type="text"
-                        placeholder="Search channels..."
-                        value={searchQuery}
-                        onChange={(e) => dispatch(setSearchQuery((e.target as HTMLInputElement).value))}
-                        className="search-input"
-                    />
+                    <SearchInput />
                 </div>
             </div>
         </header>
