@@ -15,7 +15,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./build",
-    "baseUrl": "./src/client"
+    "baseUrl": "./src/client",
+    "types": ["node"]
   },
   "include": ["src/client/**/*"],
   "exclude": ["node_modules", "build", "dist"]

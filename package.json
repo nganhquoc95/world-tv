@@ -6,13 +6,17 @@
   "scripts": {
     "start": "ts-node src/server/app.ts",
     "dev": "concurrently \"npm run server:watch\" \"npm run client:dev\"",
+    "dev:auto": "node auto-approve.js \"npm run dev\"",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "react-scripts build",
+    "build:auto": "node auto-approve.js \"npm run build\"",
+    "build:client": "vite build --outDir public/dist",
+    "build:client:auto": "node auto-approve.js \"npm run build:client\"",
     "build:server": "tsc",
     "server:dev": "ts-node src/server/app.ts",
     "server:watch": "nodemon --exec ts-node src/server/app.ts --ext ts,tsx,json",
-    "client:dev": "react-scripts start --port 3001",
-    "test": "react-scripts test"
+    "client:dev": "vite --host",
+    "test": "vitest",
+    "install:auto": "node auto-approve.js \"npm install --legacy-peer-deps\""
   },
   "keywords": [
     "tv",
@@ -44,8 +48,10 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
+    "@vitejs/plugin-react": "^5.1.1",
     "concurrently": "^8.2.2",
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.0.2",
+    "vite": "^7.2.2"
   },
   "browserslist": {
     "production": [
