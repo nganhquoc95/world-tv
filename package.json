@@ -5,11 +5,12 @@
   "main": "dist/server/app.js",
   "scripts": {
     "start": "ts-node src/server/app.ts",
-    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "dev": "concurrently \"npm run server:watch\" \"npm run client:dev\"",
     "build": "npm run build:client && npm run build:server",
     "build:client": "react-scripts build",
     "build:server": "tsc",
     "server:dev": "ts-node src/server/app.ts",
+    "server:watch": "nodemon --exec ts-node src/server/app.ts --ext ts,tsx,json",
     "client:dev": "react-scripts start --port 3001",
     "test": "react-scripts test"
   },
@@ -43,7 +44,8 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.2"
   },
   "browserslist": {
     "production": [
