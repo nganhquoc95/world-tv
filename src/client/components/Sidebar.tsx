@@ -1,4 +1,3 @@
-import React from 'react';
 import { IChannelItem } from '../types';
 import '../styles/Sidebar.css';
 

@@ -1,0 +1,2 @@
+export default function rootSaga(): Generator<import("redux-saga/effects").AllEffect<Generator<import("redux-saga/effects").AllEffect<Generator<import("redux-saga/effects").ForkEffect<never>, void, unknown>>, void, unknown>>, void, unknown>;
+//# sourceMappingURL=sagas.d.ts.map

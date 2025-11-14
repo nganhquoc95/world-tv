@@ -1,13 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { IChannelItem } from '../types';
 import '../styles/Player.css';
 
 interface PlayerProps {
     channel: IChannelItem | null;
-    onChannelChange: (channel: IChannelItem) => void;
 }
 
-function Player({ channel, onChannelChange }: PlayerProps) {
+function Player({ channel }: PlayerProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const hlsRef = useRef<any>(null);
 

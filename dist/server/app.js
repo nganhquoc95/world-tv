@@ -17,7 +17,7 @@ app.use(express_1.default.static(path_1.default.join(__dirname, '../../public'))
 // Initialize channel manager
 const channelManager = new ChannelManager_1.default();
 const parseChannels = new ParseChannels_1.default();
-const channels = parseChannels.parse();
+let channels = [];
 // API Routes
 /**
  * Health check endpoint
@@ -696,6 +696,160 @@ app.get('/api/streams', (req, res) => {
     }
 });
 /**
+ * Get all channels from SQLite database
+ */
+app.get('/api/db/channels', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 50;
+        const offset = (page - 1) * limit;
+        const dbChannels = await parseChannels.getChannels(limit, offset);
+        const total = await parseChannels.getChannelCount();
+        res.json({
+            success: true,
+            source: 'sqlite',
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit)
+            },
+            count: dbChannels.length,
+            data: dbChannels
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch channels from database',
+            details: error.message
+        });
+    }
+});
+/**
+ * Search channels in database
+ */
+app.get('/api/db/search', async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q || typeof q !== 'string') {
+            res.status(400).json({
+                success: false,
+                error: 'Search query is required'
+            });
+            return;
+        }
+        const results = await parseChannels.searchChannels(q);
+        res.json({
+            success: true,
+            source: 'sqlite',
+            query: q,
+            count: results.length,
+            data: results
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: 'Failed to search database',
+            details: error.message
+        });
+    }
+});
+/**
+ * Get channels by country from database
+ */
+app.get('/api/db/countries/:code', async (req, res) => {
+    try {
+        const { code } = req.params;
+        const results = await parseChannels.getChannelsByCountry(code);
+        res.json({
+            success: true,
+            source: 'sqlite',
+            country: code,
+            count: results.length,
+            data: results
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch channels by country',
+            details: error.message
+        });
+    }
+});
+/**
+ * Get unique countries from database
+ */
+app.get('/api/db/countries', async (_req, res) => {
+    try {
+        const countries = await parseChannels.getCountries();
+        res.json({
+            success: true,
+            source: 'sqlite',
+            count: countries.length,
+            data: countries
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch countries from database',
+            details: error.message
+        });
+    }
+});
+/**
+ * Get unique categories from database
+ */
+app.get('/api/db/categories', async (_req, res) => {
+    try {
+        const categories = await parseChannels.getCategories();
+        res.json({
+            success: true,
+            source: 'sqlite',
+            count: categories.length,
+            data: categories
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch categories from database',
+            details: error.message
+        });
+    }
+});
+/**
+ * Get channel by ID from database
+ */
+app.get('/api/db/channels/:tvgId', async (req, res) => {
+    try {
+        const { tvgId } = req.params;
+        const channel = await parseChannels.getChannelById(tvgId);
+        if (!channel) {
+            res.status(404).json({
+                success: false,
+                error: 'Channel not found'
+            });
+            return;
+        }
+        res.json({
+            success: true,
+            source: 'sqlite',
+            data: channel
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch channel from database',
+            details: error.message
+        });
+    }
+});
+/**
  * API Test endpoint - tests all major endpoints
  * Returns status of all API functions
  */
@@ -780,32 +934,19 @@ app.get('/api/test', async (_req, res) => {
 });
 // Serve index.html for all other routes (SPA support)
 app.use((_req, res) => {
-    res.sendFile(path_1.default.join(__dirname, '../../public/index.html'));
+    res.sendFile(path_1.default.join(__dirname, '../../public/dist/index.html'));
 });
 // Initialize and start server
 async function startServer() {
     try {
         console.log('Loading IPTV database...');
         await channelManager.loadData();
+        console.log('Loading M3U streams...');
+        channels = await parseChannels.parse();
         app.listen(PORT, () => {
             console.log(`\n✅ World TV Web App is running!`);
             console.log(`🌐 Open your browser: http://localhost:${PORT}`);
             console.log(`📡 API Documentation: http://localhost:${PORT}/api\n`);
-            console.log('Available endpoints:');
-            console.log('  GET  /api/health');
-            console.log('  GET  /api/countries');
-            console.log('  GET  /api/categories');
-            console.log('  GET  /api/channels');
-            console.log('  GET  /api/channels/:id');
-            console.log('  GET  /api/channels/:id/play - Get play URL for channel');
-            console.log('  GET  /api/channels/search?q=BBC');
-            console.log('  GET  /api/channels/country/:code');
-            console.log('  GET  /api/channels/country-name?name=United%20States');
-            console.log('  GET  /api/channels/category/:id');
-            console.log('  GET  /api/channels/:id/feeds');
-            console.log('  GET  /api/streams - Get all parsed stream channels');
-            console.log('  GET  /api/streams/search?q=BBC - Search streams');
-            console.log('  GET  /api/play?url=<url>&channelId=<id> - Stream playback\n');
         });
     }
     catch (error) {

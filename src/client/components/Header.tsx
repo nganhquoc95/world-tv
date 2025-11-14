@@ -1,27 +1,16 @@
-import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilterCountry, setFilterCategory, setSearchQuery } from '../store/slices/filtersSlice';
+import { RootState } from '../store';
 import '../styles/Header.css';
 
 interface HeaderProps {
     countryNameMap: Record<string, string>;
-    filterCountry: string;
-    setFilterCountry: (country: string) => void;
-    filterCategory: string;
-    setFilterCategory: (category: string) => void;
     categories: string[];
-    searchQuery: string;
-    setSearchQuery: (query: string) => void;
 }
 
-function Header({
-    countryNameMap,
-    filterCountry,
-    setFilterCountry,
-    filterCategory,
-    setFilterCategory,
-    categories,
-    searchQuery,
-    setSearchQuery
-}: HeaderProps) {
+function Header({ countryNameMap, categories }: HeaderProps) {
+    const dispatch = useDispatch();
+    const { filterCountry, filterCategory, searchQuery } = useSelector((state: RootState) => state.filters);
     const countryOptions = Object.entries(countryNameMap)
         .map(([code, name]) => ({ code, name }))
         .sort((a, b) => a.code.localeCompare(b.code));
@@ -32,39 +21,49 @@ function Header({
                 <h1 className="header-title">🌍 World TV</h1>
                 
                 <div className="header-filters">
-                    <select
-                        value={filterCountry}
-                        onChange={(e) => {
-                            setFilterCountry(e.target.value);
-                        }}
-                        className="filter-select"
-                    >
-                        <option value="">All Countries</option>
-                        {countryOptions.map(country => (
-                            <option key={country.code} value={country.code}>
-                                {country.name} ({country.code})
-                            </option>
-                        ))}
-                    </select>
+                    <div className="filter-container">
+                        <input
+                            type="text"
+                            placeholder="Filter by country..."
+                            value={filterCountry}
+                            onChange={(e) => dispatch(setFilterCountry((e.target as HTMLInputElement).value))}
+                            className="filter-input"
+                            list="country-list"
+                        />
+                        <datalist id="country-list">
+                            <option value="" />
+                            {countryOptions.map(country => (
+                                <option key={country.code} value={country.code}>
+                                    {country.name} ({country.code})
+                                </option>
+                            ))}
+                        </datalist>
+                    </div>
 
-                    <select
-                        value={filterCategory}
-                        onChange={(e) => setFilterCategory(e.target.value)}
-                        className="filter-select"
-                    >
-                        <option value="">All Categories</option>
-                        {categories.map(cat => (
-                            <option key={cat} value={cat}>
-                                {cat}
-                            </option>
-                        ))}
-                    </select>
+                    <div className="filter-container">
+                        <input
+                            type="text"
+                            placeholder="Filter by category..."
+                            value={filterCategory}
+                            onChange={(e) => dispatch(setFilterCategory((e.target as HTMLInputElement).value))}
+                            className="filter-input"
+                            list="category-list"
+                        />
+                        <datalist id="category-list">
+                            <option value="" />
+                            {categories.map(cat => (
+                                <option key={cat} value={cat}>
+                                    {cat}
+                                </option>
+                            ))}
+                        </datalist>
+                    </div>
 
                     <input
                         type="text"
                         placeholder="Search channels..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => dispatch(setSearchQuery((e.target as HTMLInputElement).value))}
                         className="search-input"
                     />
                 </div>

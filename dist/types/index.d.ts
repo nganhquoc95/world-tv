@@ -16,6 +16,20 @@ export interface IChannel {
     website?: string;
 }
 /**
+ * Parsed M3U8 channel item from stream list
+ */
+export interface IChannelItem {
+    tvgId: string;
+    tvgLogo: string;
+    categories: string[];
+    name: string;
+    countryCode: string;
+    quanlity: string;
+    url: string;
+    httpReferrer?: string;
+    httpUserAgent?: string;
+}
+/**
  * Country interface based on @iptv-org/database structure
  */
 export interface ICountry {

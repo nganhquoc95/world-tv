@@ -32,7 +32,12 @@
     flex-wrap: wrap;
 }
 
+.filter-container {
+    position: relative;
+}
+
 .filter-select,
+.filter-input,
 .search-input {
     padding: 10px 15px;
     background: rgba(255, 255, 255, 0.2);
@@ -47,6 +52,8 @@
 
 .filter-select:hover,
 .filter-select:focus,
+.filter-input:hover,
+.filter-input:focus,
 .search-input:hover,
 .search-input:focus {
     background: rgba(255, 255, 255, 0.5);
@@ -83,6 +90,7 @@
     }
 
     .filter-select,
+    .filter-input,
     .search-input {
         width: 100%;
         min-width: unset;

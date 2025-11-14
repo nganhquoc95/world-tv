@@ -1,20 +1,29 @@
-export interface IChannelItem {
-    tvgId: string;
-    tvgLogo: string;
-    groupTitle: string;
-    name: string;
-    countryCode: string;
-    quanlity: string;
-    url: string;
-}
+import { IChannelItem } from '../types';
+/**
+ * ParseChannels - Orchestrates parsing and storage of M3U channels
+ * Uses composition and dependency injection
+ * Follows Single Responsibility and Open/Closed principles
+ */
 declare class ParseChannels {
     private streamListPath;
+    private parser;
+    private repository;
     constructor();
     /**
-     * Parse channels from the M3U stream list
+     * Parse M3U file and cache in database if needed
      */
-    parse(): IChannelItem[];
-    private convertInfoToChannelItem;
+    parse(): Promise<IChannelItem[]>;
+    /**
+     * Delegate to repository methods
+     */
+    getChannels(limit?: number, offset?: number): Promise<IChannelItem[]>;
+    searchChannels(query: string): Promise<IChannelItem[]>;
+    getChannelsByCountry(countryCode: string): Promise<IChannelItem[]>;
+    getChannelById(tvgId: string): Promise<IChannelItem | null>;
+    getChannelCount(): Promise<number>;
+    getCountries(): Promise<string[]>;
+    getCategories(): Promise<string[]>;
+    closeDatabase(): void;
 }
 export default ParseChannels;
 //# sourceMappingURL=ParseChannels.d.ts.map

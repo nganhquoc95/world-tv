@@ -1,0 +1,2 @@
+export default function channelsSagas(): Generator<import("redux-saga/effects").AllEffect<Generator<import("redux-saga/effects").ForkEffect<never>, void, unknown>>, void, unknown>;
+//# sourceMappingURL=channelsSagas.d.ts.map

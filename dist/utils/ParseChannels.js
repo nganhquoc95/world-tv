@@ -5,47 +5,65 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+const ChannelParser_1 = __importDefault(require("../services/ChannelParser"));
+const ChannelRepository_1 = __importDefault(require("../services/ChannelRepository"));
+const Database_1 = __importDefault(require("./Database"));
+/**
+ * ParseChannels - Orchestrates parsing and storage of M3U channels
+ * Uses composition and dependency injection
+ * Follows Single Responsibility and Open/Closed principles
+ */
 class ParseChannels {
     constructor() {
         this.streamListPath = path_1.default.join(__dirname, '../..', 'data/streams/index.m3u');
+        this.parser = new ChannelParser_1.default();
+        this.repository = new ChannelRepository_1.default(new Database_1.default());
     }
     /**
-     * Parse channels from the M3U stream list
+     * Parse M3U file and cache in database if needed
      */
-    parse() {
-        const fileContent = fs_1.default.readFileSync(this.streamListPath, 'utf-8');
-        const lines = fileContent.split('\n');
-        const channels = [];
-        // skip 3 lines of header
-        for (let i = 3; i < lines.length; i = i + 2) {
-            const line = lines[i].trim();
-            if (line.startsWith('#EXTINF:')) {
-                const infoLine = line;
-                const urlLine = lines[i + 1]?.trim() || '';
-                const channelItem = this.convertInfoToChannelItem(infoLine, urlLine);
-                if (channelItem) {
-                    channels.push(channelItem);
-                }
+    async parse() {
+        try {
+            const fileContent = fs_1.default.readFileSync(this.streamListPath, 'utf-8');
+            const channels = this.parser.parseFile(fileContent);
+            // Store to database only if empty
+            const hasChannels = await this.repository.hasChannels();
+            if (!hasChannels) {
+                await this.repository.save(channels);
             }
+            return channels;
         }
-        return channels;
+        catch (error) {
+            console.error('Error parsing channels:', error);
+            throw error;
+        }
     }
-    convertInfoToChannelItem(infoLine, urlLine) {
-        const infoPattern = /#EXTINF:-1\s+tvg-id="(.*)"\s+tvg-logo="(.*)"\s+group-title="(.*)",(.*)/;
-        const match = infoLine.match(infoPattern);
-        if (!match) {
-            return null;
-        }
-        const [countryCode = '', quanlity = ''] = (match[1].split('.').pop() || '').split('@');
-        return {
-            tvgId: match[1],
-            tvgLogo: match[2],
-            groupTitle: match[3],
-            name: match[4],
-            countryCode,
-            quanlity,
-            url: urlLine,
-        };
+    /**
+     * Delegate to repository methods
+     */
+    getChannels(limit, offset) {
+        return this.repository.findAll(limit, offset);
+    }
+    searchChannels(query) {
+        return this.repository.search(query);
+    }
+    getChannelsByCountry(countryCode) {
+        return this.repository.findByCountry(countryCode);
+    }
+    getChannelById(tvgId) {
+        return this.repository.findById(tvgId);
+    }
+    getChannelCount() {
+        return this.repository.count();
+    }
+    getCountries() {
+        return this.repository.getCountries();
+    }
+    getCategories() {
+        return this.repository.getCategories();
+    }
+    closeDatabase() {
+        this.repository.close();
     }
 }
 exports.default = ParseChannels;
