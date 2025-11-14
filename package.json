@@ -1,0 +1,37 @@
+{
+  "name": "worldtv",
+  "version": "2.0.0",
+  "description": "A TypeScript web app for browsing TV channels by country and category using the IPTV database",
+  "main": "dist/server/app.js",
+  "scripts": {
+    "start": "ts-node src/server/app.ts",
+    "build": "tsc",
+    "dev": "ts-node src/server/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tv",
+    "iptv",
+    "channels",
+    "database",
+    "typescript",
+    "express",
+    "web"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@iptv-org/database": "github:iptv-org/database",
+    "@types/csvtojson": "^1.1.5",
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.1",
+    "cors": "^2.8.5",
+    "csvtojson": "^2.0.14",
+    "express": "^5.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19"
+  }
+}
