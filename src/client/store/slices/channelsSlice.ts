@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IChannelItem, ICountry } from '../../types';
+import { channelsActions, countriesActions, categoriesActions } from '../actions';
 
-interface RequestState {
+export interface RequestState {
   loading: boolean;
   error: string | null;
   lastSuccess: number | null;
@@ -27,14 +28,14 @@ const channelsSlice = createSlice({
   initialState,
   reducers: {
     // Channels
-    fetchChannelsStart: (state) => {
+    [channelsActions.request.type]: (state) => {
       state.requests.channels.loading = true;
       state.requests.channels.error = null;
       // Legacy support
       state.loading = true;
       state.error = null;
     },
-    fetchChannelsSuccess: (state, action: PayloadAction<IChannelItem[]>) => {
+    [channelsActions.success.type]: (state, action: PayloadAction<IChannelItem[]>) => {
       state.channels = action.payload;
       state.requests.channels.loading = false;
       state.requests.channels.error = null;
@@ -43,7 +44,7 @@ const channelsSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    fetchChannelsFailure: (state, action: PayloadAction<string>) => {
+    [channelsActions.failure.type]: (state, action: PayloadAction<string>) => {
       state.requests.channels.loading = false;
       state.requests.channels.error = action.payload;
       state.requests.channels.lastError = Date.now();
@@ -52,14 +53,14 @@ const channelsSlice = createSlice({
       state.error = action.payload;
     },
     // Countries
-    fetchCountriesStart: (state) => {
+    [countriesActions.request.type]: (state) => {
       state.requests.countries.loading = true;
       state.requests.countries.error = null;
       // Legacy support
       state.loading = true;
       state.error = null;
     },
-    fetchCountriesSuccess: (state, action: PayloadAction<ICountry[]>) => {
+    [countriesActions.success.type]: (state, action: PayloadAction<ICountry[]>) => {
       state.countries = action.payload;
       state.requests.countries.loading = false;
       state.requests.countries.error = null;
@@ -68,7 +69,7 @@ const channelsSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    fetchCountriesFailure: (state, action: PayloadAction<string>) => {
+    [countriesActions.failure.type]: (state, action: PayloadAction<string>) => {
       state.requests.countries.loading = false;
       state.requests.countries.error = action.payload;
       state.requests.countries.lastError = Date.now();
@@ -77,14 +78,14 @@ const channelsSlice = createSlice({
       state.error = action.payload;
     },
     // Categories
-    fetchCategoriesStart: (state) => {
+    [categoriesActions.request.type]: (state) => {
       state.requests.categories.loading = true;
       state.requests.categories.error = null;
       // Legacy support
       state.loading = true;
       state.error = null;
     },
-    fetchCategoriesSuccess: (state, action: PayloadAction<string[]>) => {
+    [categoriesActions.success.type]: (state, action: PayloadAction<string[]>) => {
       state.categories = action.payload;
       state.requests.categories.loading = false;
       state.requests.categories.error = null;
@@ -93,7 +94,7 @@ const channelsSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    fetchCategoriesFailure: (state, action: PayloadAction<string>) => {
+    [categoriesActions.failure.type]: (state, action: PayloadAction<string>) => {
       state.requests.categories.loading = false;
       state.requests.categories.error = action.payload;
       state.requests.categories.lastError = Date.now();
@@ -125,15 +126,6 @@ const channelsSlice = createSlice({
 });
 
 export const {
-  fetchChannelsStart,
-  fetchChannelsSuccess,
-  fetchChannelsFailure,
-  fetchCountriesStart,
-  fetchCountriesSuccess,
-  fetchCountriesFailure,
-  fetchCategoriesStart,
-  fetchCategoriesSuccess,
-  fetchCategoriesFailure,
   clearChannelsError,
   clearCountriesError,
   clearCategoriesError,

@@ -1,19 +1,13 @@
 import { call, put, takeLatest, all, delay, race } from 'redux-saga/effects';
 import ApiService from '../../services/ApiService';
 import {
-  fetchChannelsStart,
-  fetchChannelsSuccess,
-  fetchChannelsFailure,
-  fetchCountriesStart,
-  fetchCountriesSuccess,
-  fetchCountriesFailure,
-  fetchCategoriesStart,
-  fetchCategoriesSuccess,
-  fetchCategoriesFailure,
-  retryFetchChannels,
-  retryFetchCountries,
-  retryFetchCategories,
-} from '../slices/channelsSlice';
+  channelsActions,
+  countriesActions,
+  categoriesActions,
+  retryChannels,
+  retryCountries,
+  retryCategories,
+} from '../actions';
 
 // Constants
 const MAX_RETRIES = 3;
@@ -86,67 +80,67 @@ function* requestWithRetry<T>(
 function* fetchChannelsSaga(): Generator<any, void, any> {
   yield* requestWithRetry(
     () => ApiService.fetchChannels(1, 10000),
-    (response: any) => fetchChannelsSuccess(response.data || []),
-    fetchChannelsFailure
+    (response: any) => channelsActions.success(response.data || []),
+    channelsActions.failure
   );
 }
 
 function* fetchCountriesSaga(): Generator<any, void, any> {
   yield* requestWithRetry(
     () => ApiService.fetchCountries(),
-    fetchCountriesSuccess,
-    fetchCountriesFailure
+    countriesActions.success,
+    countriesActions.failure
   );
 }
 
 function* fetchCategoriesSaga(): Generator<any, void, any> {
   yield* requestWithRetry(
     () => ApiService.fetchCategories(),
-    fetchCategoriesSuccess,
-    fetchCategoriesFailure
+    categoriesActions.success,
+    categoriesActions.failure
   );
 }
 
 // Retry sagas
 function* retryFetchChannelsSaga(): Generator<any, void, any> {
-  yield put(fetchChannelsStart());
+  yield put(channelsActions.request());
   yield call(fetchChannelsSaga);
 }
 
 function* retryFetchCountriesSaga(): Generator<any, void, any> {
-  yield put(fetchCountriesStart());
+  yield put(countriesActions.request());
   yield call(fetchCountriesSaga);
 }
 
 function* retryFetchCategoriesSaga(): Generator<any, void, any> {
-  yield put(fetchCategoriesStart());
+  yield put(categoriesActions.request());
   yield call(fetchCategoriesSaga);
 }
 
 // Watcher sagas
 function* watchFetchChannels() {
-  yield takeLatest(fetchChannelsStart.type, fetchChannelsSaga);
+  yield takeLatest(channelsActions.request, fetchChannelsSaga);
 }
 
 function* watchFetchCountries() {
-  yield takeLatest(fetchCountriesStart.type, fetchCountriesSaga);
+  yield takeLatest(countriesActions.request, fetchCountriesSaga);
 }
 
 function* watchFetchCategories() {
-  yield takeLatest(fetchCategoriesStart.type, fetchCategoriesSaga);
+  yield takeLatest(categoriesActions.request, fetchCategoriesSaga);
 }
 
 // Retry watchers
 function* watchRetryChannels() {
-  yield takeLatest(retryFetchChannels.type, retryFetchChannelsSaga);
+  yield takeLatest(retryChannels.type, retryFetchChannelsSaga);
 }
 
 function* watchRetryCountries() {
-  yield takeLatest(retryFetchCountries.type, retryFetchCountriesSaga);
+  yield takeLatest(retryCountries.type, retryFetchCountriesSaga);
 }
 
 function* watchRetryCategories() {
-  yield takeLatest(retryFetchCategories.type, retryFetchCategoriesSaga);
+  yield takeLatest(retryCategories.type, retryFetchCategoriesSaga);
 }
 
 export default function* channelsSagas() {

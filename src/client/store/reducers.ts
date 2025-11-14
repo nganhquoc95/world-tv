@@ -1,6 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import channelsReducer from './slices/channelsSlice';
-import filtersReducer from './slices/filtersSlice';
+import { channelsReducer, filtersReducer } from './slices';
 
 export const rootReducer = combineReducers({
   channels: channelsReducer,
