@@ -5,14 +5,16 @@ import Sidebar from './Sidebar';
 import Player from './Player';
 import { IChannelItem } from '../types';
 import { RootState } from '../store';
-import { fetchChannels, fetchCountries, fetchCategories } from '../store/actions';
+import { channelsActions, countriesActions, categoriesActions } from '../store/slices';
 import { setCurrentPage } from '../store/slices/filtersSlice';
 import { useRequestStatus } from '../hooks/useRequestStatus';
 import '../styles/App.css';
 
 function App() {
     const dispatch = useDispatch();
-    const { channels, countries, categories, loading } = useSelector((state: RootState) => state.channels);
+    const { channels, loading: channelsLoading } = useSelector((state: RootState) => state.channels);
+    const { countries } = useSelector((state: RootState) => state.countries);
+    const { categories } = useSelector((state: RootState) => state.categories);
     const { filterCountry, filterCategory, searchQuery, currentPage, pageSize } = useSelector((state: RootState) => state.filters);
 
     const [selectedChannel, setSelectedChannel] = useState<IChannelItem | null>(null);
@@ -20,9 +22,9 @@ function App() {
 
     // Load data on component mount
     useEffect(() => {
-        dispatch(fetchChannels());
-        dispatch(fetchCountries());
-        dispatch(fetchCategories());
+        dispatch(channelsActions.request());
+        dispatch(countriesActions.request());
+        dispatch(categoriesActions.request());
     }, [dispatch]);
 
     // Create country name map
@@ -72,7 +74,7 @@ function App() {
         dispatch(setCurrentPage(page));
     };
 
-    if (loading) {
+    if (channelsLoading) {
         return (
             <div className="app-loading">
                 <div className="spinner"></div>

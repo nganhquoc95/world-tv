@@ -1,6 +1,6 @@
 // Action creation utilities for Redux Toolkit
 // These utilities help reduce boilerplate when creating Redux actions
-import { createAction, PayloadAction } from '@reduxjs/toolkit';
+import { createAction } from '@reduxjs/toolkit';
 
 /**
  * Generic action creator utility - creates a basic action creator
@@ -26,7 +26,7 @@ export const createActionCreator = <T = void>(type: string) => {
  * dispatch(userActions.success(users));
  * dispatch(userActions.failure('Network error'));
  */
-export const createAsyncActions = <TRequest = void, TSuccess = any, TFailure = string>(
+export const createAsyncActions = <TRequest = any, TSuccess = any, TFailure = string>(
   baseType: string
 ) => {
   return {
@@ -74,7 +74,14 @@ export const createValidatedAction = <T>(
 export const createActionWithMeta = <TPayload = void, TMeta = any>(
   type: string
 ) => {
-  return createAction<TPayload, string, TMeta>(type);
+  const actionCreator = (payload: TPayload, meta: TMeta) => ({
+    type,
+    payload,
+    meta,
+  });
+  actionCreator.type = type;
+  actionCreator.toString = () => type;
+  return actionCreator;
 };
 
 /**

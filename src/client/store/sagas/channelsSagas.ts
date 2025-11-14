@@ -4,10 +4,7 @@ import {
   channelsActions,
   countriesActions,
   categoriesActions,
-  retryChannels,
-  retryCountries,
-  retryCategories,
-} from '../actions';
+} from '../slices';
 
 // Constants
 const MAX_RETRIES = 3;
@@ -132,15 +129,15 @@ function* watchFetchCategories() {
 
 // Retry watchers
 function* watchRetryChannels() {
-  yield takeLatest(retryChannels.type, retryFetchChannelsSaga);
+  yield takeLatest(channelsActions.request, retryFetchChannelsSaga);
 }
 
 function* watchRetryCountries() {
-  yield takeLatest(retryCountries.type, retryFetchCountriesSaga);
+  yield takeLatest(countriesActions.request, retryFetchCountriesSaga);
 }
 
 function* watchRetryCategories() {
-  yield takeLatest(retryCategories.type, retryFetchCategoriesSaga);
+  yield takeLatest(categoriesActions.request, retryFetchCategoriesSaga);
 }
 
 export default function* channelsSagas() {

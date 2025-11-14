@@ -1,28 +1,28 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IChannelItem } from '../../types';
+import { ICountry } from '../../types';
 
-type ChannelsStateType = {
-    channels: IChannelItem[];
+type CountriesStateType = {
+    countries: ICountry[];
     loading: boolean;
     error: string | null;
 }
 
-const initialState: ChannelsStateType = {
-    channels: [],
+const initialState: CountriesStateType = {
+    countries: [],
     loading: false,
     error: null,
 };
 
-const channelsSlice = createSlice({
-    name: 'channels',
+const countriesSlice = createSlice({
+    name: 'countries',
     initialState,
     reducers: {
         request: (state) => {
             state.loading = true;
             state.error = null;
         },
-        success: (state, action: PayloadAction<IChannelItem[]>) => {
-            state.channels = action.payload;
+        success: (state, action: PayloadAction<ICountry[]>) => {
+            state.countries = action.payload;
             state.loading = false;
             state.error = null;
         },
@@ -33,6 +33,6 @@ const channelsSlice = createSlice({
     },
 });
 
-export const channelsActions = channelsSlice.actions;
+export const countriesActions = countriesSlice.actions;
 
-export default channelsSlice.reducer;
+export default countriesSlice.reducer;

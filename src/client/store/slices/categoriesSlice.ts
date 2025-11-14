@@ -1,28 +1,27 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IChannelItem } from '../../types';
 
-type ChannelsStateType = {
-    channels: IChannelItem[];
+type CategoriesStateType = {
+    categories: string[];
     loading: boolean;
     error: string | null;
 }
 
-const initialState: ChannelsStateType = {
-    channels: [],
+const initialState: CategoriesStateType = {
+    categories: [],
     loading: false,
     error: null,
 };
 
-const channelsSlice = createSlice({
-    name: 'channels',
+const categoriesSlice = createSlice({
+    name: 'categories',
     initialState,
     reducers: {
         request: (state) => {
             state.loading = true;
             state.error = null;
         },
-        success: (state, action: PayloadAction<IChannelItem[]>) => {
-            state.channels = action.payload;
+        success: (state, action: PayloadAction<string[]>) => {
+            state.categories = action.payload;
             state.loading = false;
             state.error = null;
         },
@@ -33,6 +32,6 @@ const channelsSlice = createSlice({
     },
 });
 
-export const channelsActions = channelsSlice.actions;
+export const categoriesActions = categoriesSlice.actions;
 
-export default channelsSlice.reducer;
+export default categoriesSlice.reducer;

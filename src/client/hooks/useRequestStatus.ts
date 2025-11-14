@@ -1,47 +1,52 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
-import { retryChannels, retryCountries, retryCategories } from '../store/actions';
-
-interface RequestStatus {
-  loading: boolean;
-  error: string | null;
-  lastSuccess: number | null;
-  lastError: number | null;
-}
+import { channelsActions, countriesActions, categoriesActions } from '../store/slices';
 
 export const useRequestStatus = () => {
   const dispatch = useDispatch();
-  const requests = useSelector((state: RootState) => state.channels.requests);
+  const { loading: channelsLoading, error: channelsError } = useSelector((state: RootState) => state.channels);
+  const { loading: countriesLoading, error: countriesError } = useSelector((state: RootState) => state.countries);
+  const { loading: categoriesLoading, error: categoriesError } = useSelector((state: RootState) => state.categories);
 
-  const getStatus = (type: 'channels' | 'countries' | 'categories'): RequestStatus => {
-    return requests[type];
+  const getStatus = (type: 'channels' | 'countries' | 'categories') => {
+    switch (type) {
+      case 'channels':
+        return { loading: channelsLoading, error: channelsError };
+      case 'countries':
+        return { loading: countriesLoading, error: countriesError };
+      case 'categories':
+        return { loading: categoriesLoading, error: categoriesError };
+      default:
+        throw new Error(`Unknown request type: ${type}`);
+    }
   };
 
   const retry = (type: 'channels' | 'countries' | 'categories') => {
     switch (type) {
       case 'channels':
-        dispatch(retryChannels());
+        dispatch(channelsActions.request());
         break;
       case 'countries':
-        dispatch(retryCountries());
+        dispatch(countriesActions.request());
         break;
       case 'categories':
-        dispatch(retryCategories());
+        dispatch(categoriesActions.request());
         break;
     }
   };
 
   const isAnyLoading = () => {
-    return Object.values(requests).some(req => req.loading);
+    return channelsLoading || countriesLoading || categoriesLoading;
   };
 
   const hasAnyError = () => {
-    return Object.values(requests).some(req => req.error !== null);
+    return channelsError !== null || countriesError !== null || categoriesError !== null;
   };
 
-  const getLastUpdate = (type: 'channels' | 'countries' | 'categories'): number | null => {
-    const status = getStatus(type);
-    return status.lastSuccess || status.lastError;
+  const getLastUpdate = (_type: 'channels' | 'countries' | 'categories'): number | null => {
+    // Since we simplified the state structure, we don't have lastSuccess/lastError timestamps
+    // This could be added back if needed in the future
+    return null;
   };
 
   return {

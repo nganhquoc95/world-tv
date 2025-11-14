@@ -1,9 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { channelsReducer, filtersReducer } from './slices';
+import { channelsReducer, countriesReducer, categoriesReducer, filtersReducer } from './slices';
 
-export const rootReducer = combineReducers({
+const rootReducer = combineReducers({
   channels: channelsReducer,
+  countries: countriesReducer,
+  categories: categoriesReducer,
   filters: filtersReducer,
 });
 
+export { rootReducer };
 export type RootState = ReturnType<typeof rootReducer>;
