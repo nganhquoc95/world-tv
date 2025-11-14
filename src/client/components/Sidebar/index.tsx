@@ -1,4 +1,8 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { setSearchQuery } from '../../store/slices/filtersSlice';
+import { RootState } from '../../store';
 import { IChannelItem } from '../../types';
+import Input from '../Input';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -24,12 +28,16 @@ function Sidebar({
     channelCount,
     groupCount
 }: SidebarProps) {
+    const dispatch = useDispatch();
+    const { searchQuery } = useSelector((state: RootState) => state.filters);
+
     return (
         <div className="sidebar">
             <div className="sidebar-header">
                 <div className="sidebar-search">
-                    <input
-                        type="text"
+                    <Input
+                        value={searchQuery}
+                        onChange={(value) => dispatch(setSearchQuery(value))}
                         placeholder="Search channels..."
                         className="search-box"
                     />

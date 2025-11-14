@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setFilterCountry, setFilterCategory } from '../../store/slices/filtersSlice';
 import { RootState } from '../../store';
 import InfiniteDropdown from '../InfiniteDropdown';
-import SearchInput from '../SearchInput';
 import './Header.css';
 
 interface HeaderProps {
@@ -56,7 +55,6 @@ function Header({ countryNameMap, categories }: HeaderProps) {
                         />
                     </div>
 
-                    <SearchInput />
                 </div>
             </div>
         </header>

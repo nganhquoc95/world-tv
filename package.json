@@ -4,7 +4,7 @@
   "description": "A TypeScript web app for browsing TV channels by country and category using the IPTV database",
   "main": "dist/server/app.js",
   "scripts": {
-    "start": "ts-node src/server/app.ts",
+    "start": "tsx src/server/app.ts",
     "dev": "concurrently \"npm run server:watch\" \"npm run client:dev\"",
     "dev:auto": "node auto-approve.js \"npm run dev\"",
     "build": "npm run build:client && npm run build:server",
@@ -12,8 +12,8 @@
     "build:client": "vite build --outDir public/dist",
     "build:client:auto": "node auto-approve.js \"npm run build:client\"",
     "build:server": "tsc",
-    "server:dev": "ts-node src/server/app.ts",
-    "server:watch": "nodemon --exec ts-node src/server/app.ts --ext ts,tsx,json",
+    "server:dev": "tsx src/server/app.ts",
+    "server:watch": "nodemon --exec tsx src/server/app.ts --ext ts,tsx,json",
     "client:dev": "nodemon --exec \"vite --host\" --watch vite.config.ts --watch package.json --watch tsconfig.json --ext ts,tsx,json,js,jsx",
     "generate-channels": "ts-node scripts/parseChannels.ts",
     "test": "vitest",
@@ -52,9 +52,11 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
     "@vitejs/plugin-react": "^5.1.1",
     "concurrently": "^8.2.2",
     "nodemon": "^3.0.2",
+    "tsx": "^4.19.2",
     "vite": "^7.2.2"
   },
   "browserslist": {
