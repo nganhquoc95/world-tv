@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setSearchQuery } from '../store/slices/filtersSlice';
-import { RootState } from '../store';
-import '../styles/Header.css';
+import { setSearchQuery } from '../../store/slices/filtersSlice';
+import { RootState } from '../../store';
+import './SearchInput.css';
 
 function SearchInput() {
     const dispatch = useDispatch();
