@@ -7,6 +7,7 @@ import { IChannelItem } from '../types';
 import { RootState } from '../store';
 import { fetchChannels, fetchCountries, fetchCategories } from '../store/actions';
 import { setCurrentPage } from '../store/slices/filtersSlice';
+import { useRequestStatus } from '../hooks/useRequestStatus';
 import '../styles/App.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
     const { filterCountry, filterCategory, searchQuery, currentPage, pageSize } = useSelector((state: RootState) => state.filters);
 
     const [selectedChannel, setSelectedChannel] = useState<IChannelItem | null>(null);
+    const { getStatus, retry, isAnyLoading, hasAnyError } = useRequestStatus();
 
     // Load data on component mount
     useEffect(() => {
@@ -61,16 +63,71 @@ function App() {
         return filteredChannels.slice(start, end);
     }, [filteredChannels, currentPage, pageSize]);
 
-    const totalPages = Math.ceil(filteredChannels.length / pageSize);
+    const totalPages = useMemo(() => {
+        return Math.ceil(filteredChannels.length / pageSize);
+    }, [filteredChannels.length, pageSize]);
 
     // Page change handler
     const handlePageChange = (page: number) => {
         dispatch(setCurrentPage(page));
-    };    if (loading) {
+    };
+
+    if (loading) {
         return (
             <div className="app-loading">
                 <div className="spinner"></div>
                 <p>Loading channels...</p>
+            </div>
+        );
+    }
+
+    // Show error state with retry options
+    if (hasAnyError && !isAnyLoading) {
+        const channelsStatus = getStatus('channels');
+        const countriesStatus = getStatus('countries');
+        const categoriesStatus = getStatus('categories');
+
+        return (
+            <div className="app-error">
+                <div className="error-content">
+                    <h2>⚠️ Failed to Load Data</h2>
+                    <div className="error-details">
+                        {channelsStatus.error && (
+                            <div className="error-item">
+                                <span>📺 Channels: {channelsStatus.error}</span>
+                                <button onClick={() => retry('channels')} className="retry-btn">
+                                    Retry
+                                </button>
+                            </div>
+                        )}
+                        {countriesStatus.error && (
+                            <div className="error-item">
+                                <span>🌍 Countries: {countriesStatus.error}</span>
+                                <button onClick={() => retry('countries')} className="retry-btn">
+                                    Retry
+                                </button>
+                            </div>
+                        )}
+                        {categoriesStatus.error && (
+                            <div className="error-item">
+                                <span>📂 Categories: {categoriesStatus.error}</span>
+                                <button onClick={() => retry('categories')} className="retry-btn">
+                                    Retry
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    <button
+                        onClick={() => {
+                            retry('channels');
+                            retry('countries');
+                            retry('categories');
+                        }}
+                        className="retry-all-btn"
+                    >
+                        Retry All
+                    </button>
+                </div>
             </div>
         );
     }

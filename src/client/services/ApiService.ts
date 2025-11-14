@@ -13,30 +13,7 @@ declare const window: any;
  *   - Both on same origin
  */
 const getApiUrl = (): string => {
-    // Try Vite-injected global first (set at build time)
-    if (typeof __VITE_API_URL__ !== 'undefined' && __VITE_API_URL__) {
-        return __VITE_API_URL__;
-    }
-    
-    // In dev on localhost:3001, use localhost:3000 for API
-    try {
-        if (window?.location?.hostname === 'localhost' && window.location?.port === '3001') {
-            return 'http://localhost:3000';
-        }
-    } catch (e) {
-        // window might not be available
-    }
-    
-    // Production: use same origin
-    try {
-        if (window?.location?.origin) {
-            return window.location.origin;
-        }
-    } catch (e) {
-        // window might not be available
-    }
-    
-    // Ultimate fallback
+    // For now, always use the full API URL to bypass proxy issues
     return 'http://localhost:3000';
 };
 

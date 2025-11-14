@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilterCountry, setFilterCategory, setSearchQuery } from '../store/slices/filtersSlice';
 import { RootState } from '../store';
+import InfiniteDropdown from './InfiniteDropdown';
 import '../styles/Header.css';
 
 interface HeaderProps {
@@ -11,52 +12,47 @@ interface HeaderProps {
 function Header({ countryNameMap, categories }: HeaderProps) {
     const dispatch = useDispatch();
     const { filterCountry, filterCategory, searchQuery } = useSelector((state: RootState) => state.filters);
+
+    // Convert country map to dropdown options
     const countryOptions = Object.entries(countryNameMap)
-        .map(([code, name]) => ({ code, name }))
-        .sort((a, b) => a.code.localeCompare(b.code));
+        .map(([code, name]) => ({
+            value: code,
+            label: `${name} (${code})`
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+
+    // Convert categories to dropdown options
+    const categoryOptions = categories.map(cat => ({
+        value: cat,
+        label: cat
+    }));
 
     return (
         <header className="header">
             <div className="header-content">
                 <h1 className="header-title">🌍 World TV</h1>
-                
+
                 <div className="header-filters">
                     <div className="filter-container">
-                        <input
-                            type="text"
-                            placeholder="Filter by country..."
+                        <InfiniteDropdown
+                            options={countryOptions}
                             value={filterCountry}
-                            onChange={(e) => dispatch(setFilterCountry((e.target as HTMLInputElement).value))}
+                            onChange={(value) => dispatch(setFilterCountry(value))}
+                            placeholder="Filter by country..."
                             className="filter-input"
-                            list="country-list"
+                            pageSize={20}
                         />
-                        <datalist id="country-list">
-                            <option value="" />
-                            {countryOptions.map(country => (
-                                <option key={country.code} value={country.code}>
-                                    {country.name} ({country.code})
-                                </option>
-                            ))}
-                        </datalist>
                     </div>
 
                     <div className="filter-container">
-                        <input
-                            type="text"
-                            placeholder="Filter by category..."
+                        <InfiniteDropdown
+                            options={categoryOptions}
                             value={filterCategory}
-                            onChange={(e) => dispatch(setFilterCategory((e.target as HTMLInputElement).value))}
+                            onChange={(value) => dispatch(setFilterCategory(value))}
+                            placeholder="Filter by category..."
                             className="filter-input"
-                            list="category-list"
+                            pageSize={10}
                         />
-                        <datalist id="category-list">
-                            <option value="" />
-                            {categories.map(cat => (
-                                <option key={cat} value={cat}>
-                                    {cat}
-                                </option>
-                            ))}
-                        </datalist>
                     </div>
 
                     <input

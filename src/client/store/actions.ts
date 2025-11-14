@@ -1,12 +1,18 @@
 // Action creators for triggering sagas
-export const fetchChannels = () => ({
-  type: 'channels/fetchChannelsStart',
-});
+import {
+  fetchChannelsStart,
+  fetchCountriesStart,
+  fetchCategoriesStart,
+  retryFetchChannels,
+  retryFetchCountries,
+  retryFetchCategories
+} from './slices/channelsSlice';
 
-export const fetchCountries = () => ({
-  type: 'channels/fetchCountriesStart',
-});
+export const fetchChannels = fetchChannelsStart;
+export const fetchCountries = fetchCountriesStart;
+export const fetchCategories = fetchCategoriesStart;
 
-export const fetchCategories = () => ({
-  type: 'channels/fetchCategoriesStart',
-});
+// Retry actions
+export const retryChannels = retryFetchChannels;
+export const retryCountries = retryFetchCountries;
+export const retryCategories = retryFetchCategories;

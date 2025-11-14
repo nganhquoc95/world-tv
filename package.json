@@ -14,7 +14,7 @@
     "build:server": "tsc",
     "server:dev": "ts-node src/server/app.ts",
     "server:watch": "nodemon --exec ts-node src/server/app.ts --ext ts,tsx,json",
-    "client:dev": "vite --host",
+    "client:dev": "nodemon --exec \"vite --host\" --watch vite.config.ts --watch package.json --watch tsconfig.json --ext ts,tsx,json,js,jsx",
     "test": "vitest",
     "install:auto": "node auto-approve.js \"npm install --legacy-peer-deps\""
   },

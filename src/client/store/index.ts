@@ -3,7 +3,11 @@ import createSagaMiddleware from 'redux-saga';
 import { rootReducer } from './reducers';
 import rootSaga from './sagas';
 
-const sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware({
+  onError: (error) => {
+    console.error('Redux-Saga error:', error);
+  },
+});
 
 const store = configureStore({
   reducer: rootReducer,

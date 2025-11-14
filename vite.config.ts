@@ -9,6 +9,15 @@ export default defineConfig({
   server: {
     port: 3001,
     strictPort: false,
+    host: true,
+    hmr: {
+      port: 3001,
+      overlay: true,
+    },
+    watch: {
+      usePolling: false,
+      interval: 100,
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
@@ -20,5 +29,8 @@ export default defineConfig({
   build: {
     outDir: 'public/dist',
     emptyOutDir: true,
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', '@reduxjs/toolkit', 'redux-saga'],
   },
 })
