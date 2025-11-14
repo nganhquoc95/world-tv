@@ -140,16 +140,31 @@ function InfiniteDropdown({
 
     return (
         <div className={`infinite-dropdown ${className}`} ref={dropdownRef}>
-            <input
-                type="text"
-                value={isOpen ? searchTerm : (selectedOption?.label || value || '')}
-                onChange={handleInputChange}
-                onFocus={handleInputFocus}
-                onKeyDown={handleKeyDown}
-                placeholder={placeholder}
-                className="infinite-dropdown-input"
-                autoComplete="off"
-            />
+            <div className="infinite-dropdown-input-container">
+                <input
+                    type="text"
+                    value={isOpen ? searchTerm : (selectedOption?.label || value || '')}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    onKeyDown={handleKeyDown}
+                    placeholder={placeholder}
+                    className="infinite-dropdown-input"
+                    autoComplete="off"
+                />
+                {value && (
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelect('');
+                        }}
+                        className="infinite-dropdown-clear"
+                        title="Clear selection"
+                    >
+                        ×
+                    </button>
+                )}
+            </div>
 
             {isOpen && (
                 <div className="infinite-dropdown-menu">
