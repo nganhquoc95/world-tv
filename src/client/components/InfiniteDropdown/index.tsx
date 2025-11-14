@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import '../styles/InfiniteDropdown.css';
+import './InfiniteDropdown.css';
 
 interface DropdownOption {
     value: string;

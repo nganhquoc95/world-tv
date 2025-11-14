@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { IChannelItem } from '../types';
-import '../styles/Player.css';
+import { IChannelItem } from '../../types';
+import './Player.css';
 
 interface PlayerProps {
     channel: IChannelItem | null;

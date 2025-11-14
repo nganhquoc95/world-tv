@@ -1,5 +1,5 @@
-import { IChannelItem } from '../types';
-import '../styles/Sidebar.css';
+import { IChannelItem } from '../../types';
+import './Sidebar.css';
 
 interface SidebarProps {
     channels: IChannelItem[];
