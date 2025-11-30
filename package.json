@@ -8,6 +8,7 @@
     "dev": "concurrently \"npm run server:watch\" \"npm run client:dev\"",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --outDir public/dist",
+    "build:client:prod": "npm run build:client --omit=dev",
     "build:server": "tsc",
     "server:dev": "tsx src/server/app.ts",
     "server:watch": "nodemon --exec tsx src/server/app.ts --ext ts,tsx,json",

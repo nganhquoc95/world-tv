@@ -14,7 +14,7 @@ declare const window: any;
  */
 const getApiUrl = (): string => {
     // For now, always use the full API URL to bypass proxy issues
-    return 'http://localhost:3000';
+    return process.env.VITE_API_URL || __VITE_API_URL__ || 'http://localhost:3000';
 };
 
 /**
