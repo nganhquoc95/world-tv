@@ -25,7 +25,7 @@ function renderApp() {
 renderApp();
 
 // Enable Hot Module Replacement (HMR) in development
-if (import.meta.hot) {
+if (typeof import.meta !== "undefined" && import.meta.hot) {
     import.meta.hot.accept('./components/App', (newApp) => {
         if (newApp) {
             renderApp();
