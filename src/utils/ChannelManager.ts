@@ -14,7 +14,7 @@ export class ChannelManager {
     this.dbPath = path.join(
       __dirname,
       '../..',
-      'node_modules/@nganhquoc95/database/data'
+      'data'
     );
   }
 
