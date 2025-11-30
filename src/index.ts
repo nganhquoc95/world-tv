@@ -12,6 +12,7 @@ const PUBLIC_DIR = path.join(__dirname, '../public/dist');
 app.use(cors());
 app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
+app.use(express.static(path.join(PUBLIC_DIR, 'assets')));
 
 // Initialize channel manager
 const channelManager = new ChannelManager();
