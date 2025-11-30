@@ -15,7 +15,7 @@
     "client:dev": "nodemon --exec \"vite --host\" --watch vite.config.ts --watch package.json --watch tsconfig.json --ext ts,tsx,json,js,jsx",
     "generate-channels": "ts-node scripts/parseChannels.ts",
     "test": "vitest",
-    "install": "npm install --legacy-peer-deps"
+    "install": "npm install"
   },
   "keywords": [
     "tv",
@@ -29,7 +29,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@iptv-org/database": "github:iptv-org/database",
+    "@nganhquoc95/database": "github:nganhquoc95/database#v1.0.0",
     "@reduxjs/toolkit": "^2.10.1",
     "@types/csvtojson": "^1.1.5",
     "@types/express": "^5.0.5",
