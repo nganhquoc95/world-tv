@@ -30,6 +30,7 @@ export default defineConfig({
     outDir: 'public/dist',
     emptyOutDir: true,
   },
+  publicDir: 'public/dist/assets',
   optimizeDeps: {
     include: ['react', 'react-dom', '@reduxjs/toolkit', 'redux-saga'],
   },
