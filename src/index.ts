@@ -673,7 +673,7 @@ app.get('/api/test', async (_req: Request, res: Response): Promise<void> => {
 });
 
 // Serve index.html for all other routes (SPA support)
-app.use((_req: Request, res: Response) => {
+app.get('*', (_req: Request, res: Response) => {
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
