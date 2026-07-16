@@ -4,6 +4,7 @@ import { RootState } from '../../store';
 import { IChannelItem } from '../../types';
 import Input from '../Input';
 import './Sidebar.css';
+import { useState } from 'react';
 
 interface SidebarProps {
     channels: IChannelItem[];
@@ -30,9 +31,15 @@ function Sidebar({
 }: SidebarProps) {
     const dispatch = useDispatch();
     const { searchQuery } = useSelector((state: RootState) => state.filters);
+    const [isHiddenSidebar, setHiddenSidebar] = useState(false);
 
     return (
-        <div className="sidebar">
+        <div className={"sidebar" + (isHiddenSidebar ? " sidebar-collapsed" : "")}>
+            <div
+                className="hidden-left"
+                onClick={() => setHiddenSidebar(!isHiddenSidebar) }>
+                {isHiddenSidebar ? ">" : "<"}
+            </div>
             <div className="sidebar-header">
                 <div className="sidebar-search">
                     <Input

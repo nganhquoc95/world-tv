@@ -19,6 +19,8 @@ function Player({ channel }: PlayerProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [retryTrigger, setRetryTrigger] = useState(0);
 
+    const [isHiddenRightSide, setHiddenRightSide] = useState(false);
+
     // Clear error state when channel changes
     useEffect(() => {
         if (channel) {
@@ -279,7 +281,12 @@ function Player({ channel }: PlayerProps) {
                 />
             </div>
 
-            <div className="player-info">
+            <div className={"player-info " + (isHiddenRightSide ? "player-info-collapsed" : '')}>
+                <div
+                    className="hidden-right"
+                    onClick={() => setHiddenRightSide(!isHiddenRightSide) }>
+                    {isHiddenRightSide ? "<" : ">"}
+                </div>
                 <div className="player-header">
                     {channel.tvgLogo && (
                         <img src={channel.tvgLogo} alt={channel.name} className="player-logo" />
