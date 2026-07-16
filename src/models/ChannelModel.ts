@@ -1,6 +1,6 @@
-import Database from '../utils/Database';
-import { IChannelItem } from '../types';
-import Model from './Model';
+import Database from '../utils/Database.js';
+import { IChannelItem } from '../types/index.js';
+import Model from './Model.js';
 
 /**
  * ChannelModel - Data access layer for channel operations

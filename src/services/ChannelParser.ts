@@ -1,4 +1,4 @@
-import { IChannelItem } from '../types';
+import { IChannelItem } from '../types/index.js';
 
 /**
  * Responsible for parsing M3U8 format and extracting channel metadata

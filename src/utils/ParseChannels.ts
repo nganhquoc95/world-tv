@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs';
-import ChannelParser from '../services/ChannelParser';
-import ChannelRepository from '../services/ChannelRepository';
-import Database from './Database';
-import { IChannelItem } from '../types';
+import ChannelParser from '../services/ChannelParser.js';
+import ChannelRepository from '../services/ChannelRepository.js';
+import Database from './Database.js';
+import { IChannelItem } from '../types/index.js';
 
 /**
  * ParseChannels - Orchestrates parsing and storage of M3U channels

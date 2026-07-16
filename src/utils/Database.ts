@@ -1,7 +1,7 @@
 import sqlite3 from 'sqlite3';
 import path from 'path';
 import fs from 'fs';
-import { IChannelItem } from '../types';
+import { IChannelItem } from '../types/index.js';
 
 class Database {
     private db: sqlite3.Database;

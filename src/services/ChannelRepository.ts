@@ -1,5 +1,5 @@
-import Database from '../utils/Database';
-import { IChannelItem } from '../types';
+import Database from '../utils/Database.js';
+import { IChannelItem } from '../types/index.js';
 
 /**
  * Repository pattern for channel data persistence

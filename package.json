@@ -8,7 +8,7 @@
     "build": "npm run build:data && npm run build:client",
     "build:data": "node scripts/generate-json-data.js",
     "build:client": "npx vite build --outDir public/dist",
-    "build:server": "tsc --project tsconfig.server.json",
+    "build:server": "tsc --build tsconfig.server.json",
     "server:dev": "nodemon --exec tsx src/index.ts --ext ts,tsx,json",
     "client:dev": "npx vite --host",
     "generate-channels": "ts-node scripts/parseChannels.ts",

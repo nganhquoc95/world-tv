@@ -1,6 +1,6 @@
 import path from 'path';
 import { default as csvtojson } from 'csvtojson';
-import { IChannel, ICountry, ICategory, IFeed } from '../types';
+import { IChannel, ICountry, ICategory, IFeed } from '../types/index.js';
 
 export class ChannelManager {
   private channels: IChannel[] = [];

@@ -1,12 +1,13 @@
+import { dirname } from 'path';
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import path from 'path';
-import ChannelManager from './utils/ChannelManager';
-import ChannelModel from './models/ChannelModel';
+import ChannelManager from './utils/ChannelManager.js';
+import ChannelModel from './models/ChannelModel.js';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
-const PUBLIC_DIR = path.join(__dirname, '../public/dist');
+const PUBLIC_DIR = path.join(dirname(__filename), '../public/dist');
 
 // Middleware
 app.use(cors());
