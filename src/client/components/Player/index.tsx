@@ -25,7 +25,12 @@ function Player({ channel }: PlayerProps) {
             setError(null);
             setIsLoading(true);
         }
-    }, [channel]);
+
+        if (hlsRef.current) {
+            hlsRef.current.destroy();
+            hlsRef.current = null;
+        }
+    }, [channel?.url]);
 
     useEffect(() => {
         if (!channel || !videoRef.current) return;
@@ -35,12 +40,6 @@ function Player({ channel }: PlayerProps) {
         const playChannel = async () => {
             const url = channel.url;
             const videoElement = videoRef.current!;
-
-            // Stop current playback
-            if (hlsRef.current) {
-                hlsRef.current.destroy();
-                hlsRef.current = null;
-            }
 
             // Check if URL is HLS (m3u8)
             if (url.includes('.m3u8')) {
@@ -52,6 +51,10 @@ function Player({ channel }: PlayerProps) {
                             debug: false,
                             enableWorker: true,
                             lowLatencyMode: true,
+                            manifestLoadingMaxRetry: 1,
+                            manifestLoadingRetryDelay: 500,
+                            fragLoadingMaxRetry: 1,
+                            fragLoadingRetryDelay: 500,
                         };
 
                         // Add custom headers if available
