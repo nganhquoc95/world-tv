@@ -1,5 +1,7 @@
+import https from 'https';
+import http from 'http';
 import path from 'path';
-import fs from 'fs';
+// import fs from 'fs';
 import ChannelParser from '../services/ChannelParser.js';
 import ChannelRepository from '../services/ChannelRepository.js';
 import Database from './Database.js';
@@ -25,12 +27,40 @@ class ParseChannels {
         this.repository = new ChannelRepository(new Database());
     }
 
+    readFileFromUrl(fileUrl: string) {
+        return new Promise((resolve, reject) => {
+            try {
+                const urlObj = new URL(fileUrl);
+                const client = urlObj.protocol === 'https:' ? https : http;
+
+                client.get(urlObj, (res) => {
+                    if (res.statusCode !== 200) {
+                        reject(new Error(`Request Failed. Status Code: ${res.statusCode}`));
+                        res.resume(); // Consume response data to free memory
+                        return;
+                    }
+
+                    let data = '';
+                    res.setEncoding('utf8');
+
+                    res.on('data', chunk => data += chunk);
+                    res.on('end', () => resolve(data));
+                }).on('error', reject);
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+
     /**
      * Parse M3U file and cache in database if needed
      */
     public async parse(): Promise<IChannelItem[]> {
         try {
-            const fileContent = fs.readFileSync(this.streamListPath, 'utf-8');
+            // const fileContent = fs.readFileSync(this.streamListPath, 'utf-8');
+            const fileUrl = "https://iptv-org.github.io/iptv/index.m3u";
+            const fileContent = await this.readFileFromUrl(fileUrl) as string;
             const channels = this.parser.parseFile(fileContent);
 
             // Store to database only if empty
