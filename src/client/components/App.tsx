@@ -136,10 +136,10 @@ function App() {
 
     return (
         <div className="app">
-            <Header
+            {/* <Header
                 countryNameMap={countryNameMap}
                 categories={categories}
-            />
+            /> */}
 
             <div className="main-container">
                 <Sidebar
@@ -152,6 +152,8 @@ function App() {
                     onPageChange={handlePageChange}
                     channelCount={channels.length}
                     groupCount={groups.length}
+                    countryNameMap={countryNameMap}
+                    categories={categories}
                 />
 
                 <Player

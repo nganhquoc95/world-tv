@@ -4,24 +4,28 @@
     border-right: 1px solid #2d2d44;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    /* overflow: hidden; */
     position: relative;
-    padding-right: 20px;
 }
 
 .sidebar-collapsed {
-    margin-left: -330px;
+    margin-left: -350px;
 }
 
 .hidden-left {
     position: absolute;
-    right: 0px;
+    right: -18px;
     top: 50%;
     transform: translateY(-50%);
     padding: 4px;
     background-color: #fff;
     color: #2d2d44;
-    border-radius: 4px;
+    border-radius: 0 4px 4px 0;
+    z-index: 999;
+}
+
+.sidebar-collapsed .hidden-left {
+    opacity: 0.5;
 }
 
 .sidebar-header {
@@ -223,7 +227,8 @@
 
 @media (max-width: 768px) {
     .sidebar {
-        max-height: 250px;
+        height: 100vh;
+        max-height: 100%;
     }
 
     .channel-item {

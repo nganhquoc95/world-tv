@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSearchQuery } from '../../store/slices/filtersSlice';
 import { RootState } from '../../store';
 import { IChannelItem } from '../../types';
+import Header from '../Header';
 import Input from '../Input';
 import './Sidebar.css';
 import { useState } from 'react';
@@ -16,6 +17,8 @@ interface SidebarProps {
     onPageChange: (page: number) => void;
     channelCount: number;
     groupCount: number;
+    countryNameMap: Record<string, string>;
+    categories: string[];
 }
 
 function Sidebar({
@@ -27,7 +30,9 @@ function Sidebar({
     totalPages,
     onPageChange,
     channelCount,
-    groupCount
+    groupCount,
+    countryNameMap,
+    categories,
 }: SidebarProps) {
     const dispatch = useDispatch();
     const { searchQuery } = useSelector((state: RootState) => state.filters);
@@ -40,6 +45,12 @@ function Sidebar({
                 onClick={() => setHiddenSidebar(!isHiddenSidebar) }>
                 {isHiddenSidebar ? ">" : "<"}
             </div>
+
+            <Header
+                countryNameMap={countryNameMap}
+                categories={categories}
+            />
+
             <div className="sidebar-header">
                 <div className="sidebar-search">
                     <Input

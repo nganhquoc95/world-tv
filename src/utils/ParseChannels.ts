@@ -64,10 +64,10 @@ class ParseChannels {
             const channels = this.parser.parseFile(fileContent);
 
             // Store to database only if empty
-            const hasChannels = await this.repository.hasChannels();
-            if (!hasChannels) {
-                await this.repository.save(channels);
-            }
+            // const hasChannels = await this.repository.hasChannels();
+            // if (!hasChannels) {
+            await this.repository.save(channels);
+            // }
 
             return channels;
         } catch (error) {

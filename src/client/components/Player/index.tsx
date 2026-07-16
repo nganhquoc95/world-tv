@@ -19,7 +19,7 @@ function Player({ channel }: PlayerProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [retryTrigger, setRetryTrigger] = useState(0);
 
-    const [isHiddenRightSide, setHiddenRightSide] = useState(false);
+    const [isHiddenRightSide, setHiddenRightSide] = useState(true);
 
     // Clear error state when channel changes
     useEffect(() => {
